@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Anniversary | Our Beautiful Journey</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Fredoka+One&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- LOCK SCREEN OVERLAY -->
+    <div id="lock-screen" class="lock-screen">
+        <div class="lock-music-hint"><i class="fa-solid fa-music"></i> Turn sound on</div>
+        <div class="lock-container glass">
+            <!-- Left Side: Heart Frame Portrait -->
+            <div class="lock-left">
+                <div class="heart-lace-border">
+                    <div class="heart-frame">
+                        <img src="assets/lock_kittens.png" alt="Lock Kitten Portrait" class="lock-portrait">
+                    </div>
+                    <div class="heart-bow"><i class="fa-solid fa-ribbon"></i></div>
+                </div>
+            </div>
+            <!-- Right Side: Keypad -->
+            <div class="lock-right">
+                <div class="lock-header">
+                    <h2>Enter a passcode</h2>
+                    <p>Enter the 4-digit key (1207) to unlock</p>
+                </div>
+                
+                <div class="passcode-display">
+                    <span class="passcode-box"></span>
+                    <span class="passcode-box"></span>
+                    <span class="passcode-box"></span>
+                    <span class="passcode-box"></span>
+                </div>
+
+                <div class="keypad">
+                    <button class="key-btn" data-val="1">1</button>
+                    <button class="key-btn" data-val="2">2</button>
+                    <button class="key-btn" data-val="3">3</button>
+                    <button class="key-btn" data-val="4">4</button>
+                    <button class="key-btn" data-val="5">5</button>
+                    <button class="key-btn" data-val="6">6</button>
+                    <button class="key-btn" data-val="7">7</button>
+                    <button class="key-btn" data-val="8">8</button>
+                    <button class="key-btn" data-val="9">9</button>
+                    <button class="key-btn spec-btn" id="key-clear"><i class="fa-solid fa-backspace"></i></button>
+                    <button class="key-btn" data-val="0">0</button>
+                    <button class="key-btn spec-btn" id="key-enter"><i class="fa-solid fa-heart"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN PORTAL -->
+    <div id="app-container" class="app-container hidden">
+        <!-- Floating Canvas Animation -->
+        <canvas id="canvas-hearts"></canvas>
+
+        <!-- STORY PROGRESS ROADMAP -->
+        <div class="story-roadmap-container">
+            <div class="story-roadmap glass">
+                <div class="roadmap-line"></div>
+                <div class="roadmap-step active-step" data-slide="0"><i class="fa-solid fa-play"></i><span class="step-label">Start</span></div>
+                <div class="roadmap-step" data-slide="1"><i class="fa-solid fa-clock"></i><span class="step-label">Timer</span></div>
+                <div class="roadmap-step" data-slide="2"><i class="fa-solid fa-calendar-day"></i><span class="step-label">Calendar</span></div>
+                <div class="roadmap-step" data-slide="3"><i class="fa-solid fa-box-open"></i><span class="step-label">Gift</span></div>
+                <div class="roadmap-step" data-slide="4"><i class="fa-solid fa-cookie-bite"></i><span class="step-label">Love Jar</span></div>
+                <div class="roadmap-step" data-slide="5"><i class="fa-solid fa-ticket"></i><span class="step-label">Coupons</span></div>
+                <div class="roadmap-step" data-slide="6"><i class="fa-solid fa-circle-question"></i><span class="step-label">Quiz</span></div>
+                <div class="roadmap-step" data-slide="7"><i class="fa-solid fa-gamepad"></i><span class="step-label">Match</span></div>
+                <div class="roadmap-step" data-slide="8"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="step-label">Wish</span></div>
+                <div class="roadmap-step" data-slide="9"><i class="fa-solid fa-heart-circle-check"></i><span class="step-label">Bucket</span></div>
+                <div class="roadmap-step" data-slide="10"><i class="fa-solid fa-puzzle-piece"></i><span class="step-label">Puzzle</span></div>
+                <div class="roadmap-step" data-slide="11"><i class="fa-solid fa-images"></i><span class="step-label">Gallery</span></div>
+            </div>
+        </div>
+
+        <!-- Floating Music Control -->
+        <div class="music-widget glass">
+            <button id="music-toggle" aria-label="Toggle Music">
+                <i class="fa-solid fa-music"></i>
+            </button>
+            <div class="music-bars">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <!-- Hidden Audio Element -->
+        <audio id="bg-music" loop preload="auto">
+            <source src="iwannabeyours.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- Slide Navigation Controls -->
+        <div class="story-navigation">
+            <button id="prev-slide" class="nav-arrow-btn"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+            <span class="slide-indicator">Slide 1 / 12</span>
+            <button id="next-slide" class="nav-arrow-btn">Next <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <!-- SLIDES WRAPPER -->
+        <div class="slides-container">
+
+            <!-- SLIDE 1: PROLOGUE NARRATIVE -->
+            <div class="slide active-slide slide-prologue" id="slide-1">
+                <div class="prologue-card glass">
+                    <div class="prologue-scroll">
+                        <div id="prologue-text" class="typewriter-text"></div>
+                    </div>
+                    <button id="prologue-start-btn" class="btn btn-primary hidden animate-pulse"><i class="fa-solid fa-heart"></i> Open Our Timeline</button>
+                </div>
+            </div>
+
+            <!-- SLIDE 2: GINGHAM TITLE BANNER -->
+            <div class="slide slide-gingham" id="slide-2">
+                <div class="cloud-card glass animate-float">
+                    <span class="tagline">Our Special Journey</span>
+                    <h1 class="glow-text">Happy Anniversary</h1>
+                    <p class="cloud-sub">A small reminder how much you mean to me</p>
+                    <div class="divider-hearts"><i class="fa-solid fa-heart"></i><i class="fa-solid fa-heart"></i><i class="fa-solid fa-heart"></i></div>
+                    
+                    <!-- Live Countdown / Count Up -->
+                    <div class="counter-display">
+                        <h3>We have been officially together for:</h3>
+                        <div class="counter-grid">
+                            <div class="c-unit">
+                                <span id="c-years" class="c-val">00</span>
+                                <span class="c-lbl">Years</span>
+                            </div>
+                            <div class="c-unit">
+                                <span id="c-months" class="c-val">00</span>
+                                <span class="c-lbl">Months</span>
+                            </div>
+                            <div class="c-unit">
+                                <span id="c-days" class="c-val">00</span>
+                                <span class="c-lbl">Days</span>
+                            </div>
+                            <div class="c-unit">
+                                <span id="c-hours" class="c-val">00</span>
+                                <span class="c-lbl">Hours</span>
+                            </div>
+                            <div class="c-unit">
+                                <span id="c-minutes" class="c-val">00</span>
+                                <span class="c-lbl">Mins</span>
+                            </div>
+                            <div class="c-unit">
+                                <span id="c-seconds" class="c-val">00</span>
+                                <span class="c-lbl">Secs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: THE DAY IT BECAME OFFICIAL (CALENDAR) -->
+            <div class="slide slide-calendar" id="slide-3">
+                <div class="slide-content-split">
+                    <div class="calendar-card glass">
+                        <h2>The day it became official</h2>
+                        <p class="calendar-subtitle">July 12th, 2025</p>
+                        
+                        <!-- Mini Calendar Grid -->
+                        <div class="calendar-widget">
+                            <div class="calendar-month-header">July 2025</div>
+                            <div class="calendar-days-header">
+                                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                            </div>
+                            <div class="calendar-grid-days">
+                                <!-- Placeholders for June end offset (July 1st 2025 is Tue) -->
+                                <span class="off"></span><span class="off"></span>
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                                <span>8</span><span>9</span><span>10</span><span>11</span>
+                                <span class="special-day-circled">12</span>
+                                <span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span>
+                                <span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span>
+                                <span>27</span><span>28</span><span>29</span><span>30</span><span>31</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="calendar-photo-frame glass">
+                        <img src="assets/couple_portrait_vertical.png" alt="Couple portrait" class="calendar-photo">
+                        <div class="photo-caption">Where our beautiful story began...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 4: I'VE MADE SOMETHING (PRESENT BOX) -->
+            <div class="slide slide-present" id="slide-4">
+                <div class="present-card-container">
+                    <h2 class="present-title">I've made something</h2>
+                    <p class="present-desc">click to open</p>
+                    
+                    <div class="gift-box-wrapper" id="gift-box-btn">
+                        <!-- Gift Box Lid -->
+                        <div class="gift-lid">
+                            <img src="assets/gift_box.png" alt="Gift Lid" class="gift-img-lid">
+                        </div>
+                        <!-- Gift Box Body -->
+                        <div class="gift-body">
+                            <img src="assets/gift_box.png" alt="Gift Body" class="gift-img-body">
+                        </div>
+                        
+                        <!-- Slid out letter -->
+                        <div class="gift-letter" id="gift-letter">
+                            <div class="gift-letter-paper">
+                                <span class="gift-letter-title">My Heart,</span>
+                                <p>Happy Anniversary! Every single day with you is a gift that I cherish. I am so incredibly grateful for your love, your warm smiles, and all the magical moments we share.</p>
+                                <p>You have made my world complete. Thank you for being my partner, my best friend, and my happy place. I love you more than words can express.</p>
+                                <p class="gift-letter-closing">Forever Yours,<br><span class="letter-sig">Me</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5: LOVE JAR (10 REASONS) -->
+            <div class="slide slide-love-jar" id="slide-5">
+                <div class="love-jar-wrapper container">
+                    <h2 class="jar-title text-center">Reasons Why I Love You</h2>
+                    <p class="jar-subtitle text-center">Tap the glass jar to draw a note of love</p>
+                    
+                    <div class="jar-layout">
+                        <!-- Left: Glass Jar -->
+                        <div class="jar-container" id="love-jar-trigger">
+                            <div class="jar-lid"></div>
+                            <div class="jar-body">
+                                <span class="jar-label-text">Love Jar</span>
+                                <div class="floating-hearts-jar">
+                                    <i class="fa-solid fa-heart jh-1"></i>
+                                    <i class="fa-solid fa-heart jh-2"></i>
+                                    <i class="fa-solid fa-heart jh-3"></i>
+                                    <i class="fa-solid fa-heart jh-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right: Note Card Display -->
+                        <div class="note-display-area">
+                            <div class="jar-progress-bar-container glass">
+                                <span>Notes Opened: <span id="notes-opened-count">0</span> / 10</span>
+                                <div class="jar-progress-track">
+                                    <div class="jar-progress-fill" id="jar-progress-fill-bar"></div>
+                                </div>
+                            </div>
+
+                            <div class="note-card paper-texture hidden" id="drawn-note-card">
+                                <div class="note-paper-content">
+                                    <span class="note-number" id="drawn-note-number">Reason #1</span>
+                                    <p class="note-text" id="drawn-note-text">Click the jar to reveal the first reason...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 6: LOVE COUPONS -->
+            <div class="slide slide-coupons" id="slide-6">
+                <div class="coupons-wrapper container">
+                    <h2 class="coupons-title text-center">Love Coupons For You</h2>
+                    <p class="coupons-subtitle text-center">Redeemable anytime with a smile!</p>
+                    
+                    <div class="coupons-grid">
+                        <div class="coupon-card glass" id="coupon-1">
+                            <div class="coupon-header">
+                                <span class="coupon-tag">Redeemable</span>
+                                <i class="fa-solid fa-film"></i>
+                            </div>
+                            <h3>Movie Night</h3>
+                            <p>You choose the movie, I bring the snacks and cozy blankets. No arguments!</p>
+                            <div class="coupon-footer">
+                                <button class="btn btn-primary coupon-redeem-btn">Redeem Coupon</button>
+                            </div>
+                            <div class="coupon-stamp hidden">REDEEMED</div>
+                        </div>
+
+                        <div class="coupon-card glass" id="coupon-2">
+                            <div class="coupon-header">
+                                <span class="coupon-tag">Redeemable</span>
+                                <i class="fa-solid fa-utensils"></i>
+                            </div>
+                            <h3>Cozy Dinner</h3>
+                            <p>Valid for one gourmet home-cooked meal of your absolute choice, dessert included.</p>
+                            <div class="coupon-footer">
+                                <button class="btn btn-primary coupon-redeem-btn">Redeem Coupon</button>
+                            </div>
+                            <div class="coupon-stamp hidden">REDEEMED</div>
+                        </div>
+
+                        <div class="coupon-card glass" id="coupon-3">
+                            <div class="coupon-header">
+                                <span class="coupon-tag">Redeemable</span>
+                                <i class="fa-solid fa-car"></i>
+                            </div>
+                            <h3>Late Drive</h3>
+                            <p>A promise of a late-night drive playing your favorite playlist, destination unknown.</p>
+                            <div class="coupon-footer">
+                                <button class="btn btn-primary coupon-redeem-btn">Redeem Coupon</button>
+                            </div>
+                            <div class="coupon-stamp hidden">REDEEMED</div>
+                        </div>
+
+                        <div class="coupon-card glass" id="coupon-4">
+                            <div class="coupon-header">
+                                <span class="coupon-tag">Redeemable</span>
+                                <i class="fa-solid fa-face-smile-wink"></i>
+                            </div>
+                            <h3>Anger Pass</h3>
+                            <p>Instantly defuses any silly disagreement. Valid for an immediate warm hug.</p>
+                            <div class="coupon-footer">
+                                <button class="btn btn-primary coupon-redeem-btn">Redeem Coupon</button>
+                            </div>
+                            <div class="coupon-stamp hidden">REDEEMED</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 7: RELATIONSHIP TRIVIA QUIZ -->
+            <div class="slide slide-trivia" id="slide-7">
+                <div class="trivia-wrapper container">
+                    <h2 class="trivia-title text-center">Our Love Trivia</h2>
+                    <p class="trivia-subtitle text-center">Answer correctly to unlock our match game!</p>
+                    
+                    <div class="quiz-container-box glass" id="quiz-box">
+                        <div class="quiz-progress-indicator">Question <span id="quiz-question-num">1</span> of 3</div>
+                        
+                        <div class="quiz-question-card">
+                            <h3 id="quiz-question-text">Which month is our special anniversary month?</h3>
+                            
+                            <div class="quiz-options-list">
+                                <button class="quiz-opt-btn" data-opt="0">April</button>
+                                <button class="quiz-opt-btn" data-opt="1">June</button>
+                                <button class="quiz-opt-btn" data-opt="2">July</button>
+                                <button class="quiz-opt-btn" data-opt="3">December</button>
+                            </div>
+                        </div>
+
+                        <div class="quiz-feedback-box hidden" id="quiz-feedback">
+                            <i class="fa-solid fa-circle-check feedback-icon"></i>
+                            <span id="quiz-feedback-msg">Correct! We shared a sweet coffee.</span>
+                            <button id="quiz-next-question-btn" class="btn btn-primary">Next Question <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="quiz-victory-card glass hidden animate-pop-in" id="quiz-victory-card">
+                        <div class="quiz-victory-icon"><i class="fa-solid fa-trophy animate-pulse"></i></div>
+                        <h3>Love Quiz Completed!</h3>
+                        <p>You know us so well! You've unlocked our card matching challenge.</p>
+                        <button id="quiz-victory-close-btn" class="btn btn-primary">Play Match Game <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 8: MEMORY MATCH GAME -->
+            <div class="slide slide-memory-game" id="slide-8">
+                <div class="memory-wrapper container">
+                    <h2 class="memory-title text-center">Our Perfect Match</h2>
+                    <p class="memory-subtitle text-center">Flip the cards to match our special symbols!</p>
+                    
+                    <div class="memory-grid">
+                        <div class="memory-card" data-card="heart">
+                            <div class="card-inner">
+                                <div class="card-front"><i class="fa-solid fa-heart"></i></div>
+                                <div class="card-back"><i class="fa-solid fa-question"></i></div>
+                            </div>
+                        </div>
+                        <div class="memory-card" data-card="heart">
+                            <div class="card-inner">
+                                <div class="card-front"><i class="fa-solid fa-heart"></i></div>
+                                <div class="card-back"><i class="fa-solid fa-question"></i></div>
+                            </div>
+                        </div>
+                        <div class="memory-card" data-card="star">
+                            <div class="card-inner">
+                                <div class="card-front"><i class="fa-solid fa-star"></i></div>
+                                <div class="card-back"><i class="fa-solid fa-question"></i></div>
+                            </div>
+                        </div>
+                        <div class="memory-card" data-card="star">
+                            <div class="card-inner">
+                                <div class="card-front"><i class="fa-solid fa-star"></i></div>
+                                <div class="card-back"><i class="fa-solid fa-question"></i></div>
+                            </div>
+                        </div>
+                        <div class="memory-card" data-card="gift">
+                            <div class="card-inner">
+                                <div class="card-front"><i class="fa-solid fa-gift"></i></div>
+                                <div class="card-back"><i class="fa-solid fa-question"></i></div>
+                            </div>
+                        </div>
+                        <div class="memory-card" data-card="gift">
+                            <div class="card-inner">
+                                <div class="card-front"><i class="fa-solid fa-gift"></i></div>
+                                <div class="card-back"><i class="fa-solid fa-question"></i></div>
+                            </div>
+                        </div>
+                        <div class="memory-card" data-card="crown">
+                            <div class="card-inner">
+                                <div class="card-front"><i class="fa-solid fa-crown"></i></div>
+                                <div class="card-back"><i class="fa-solid fa-question"></i></div>
+                            </div>
+                        </div>
+                        <div class="memory-card" data-card="crown">
+                            <div class="card-inner">
+                                <div class="card-front"><i class="fa-solid fa-crown"></i></div>
+                                <div class="card-back"><i class="fa-solid fa-question"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="memory-victory" class="memory-victory-banner glass hidden">
+                        <h3>We are a Perfect Match! ❤️</h3>
+                        <p>Every piece of our hearts fits together beautifully.</p>
+                        <button id="memory-next-btn" class="btn btn-primary">Release a Star Wish <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 9: WISH LANTERN SKY -->
+            <div class="slide slide-wish" id="slide-9">
+                <div class="wish-wrapper container">
+                    <h2 class="wish-title text-center">Send a Wish to the Stars</h2>
+                    <p class="wish-subtitle text-center">Type a wish for our future and watch it float into the starry sky</p>
+                    
+                    <div class="wish-sky-container glass">
+                        <!-- Space where lanterns float up -->
+                        <div class="lanterns-container" id="lanterns-area"></div>
+                        
+                        <div class="wish-input-box">
+                            <input type="text" id="wish-text-input" placeholder="Our dream together is to..." class="glass-input">
+                            <button id="send-wish-btn" class="btn btn-primary">Release Lantern <i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                    
+                    <!-- Display board of wishes -->
+                    <div class="saved-wishes-board glass">
+                        <h3>Our Floating Wishes</h3>
+                        <div class="wishes-list" id="wishes-board-list">
+                            <span class="empty-wish-msg">No wishes released yet. Release a lantern to write our history...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 10: OUR BUCKET LIST -->
+            <div class="slide slide-bucket-list" id="slide-10">
+                <div class="bucket-wrapper container">
+                    <h2 class="bucket-title text-center">Our Future Adventures</h2>
+                    <p class="bucket-subtitle text-center">Dreams we will build together</p>
+                    
+                    <div class="bucket-list-container glass">
+                        <div class="bucket-item">
+                            <label class="bucket-label">
+                                <input type="checkbox" class="bucket-checkbox">
+                                <span class="custom-checkbox"><i class="fa-solid fa-heart"></i></span>
+                                <span class="bucket-text">Travel the world together 🌍</span>
+                            </label>
+                        </div>
+                        <div class="bucket-item">
+                            <label class="bucket-label">
+                                <input type="checkbox" class="bucket-checkbox">
+                                <span class="custom-checkbox"><i class="fa-solid fa-heart"></i></span>
+                                <span class="bucket-text">Master a signature recipe together 🍳</span>
+                            </label>
+                        </div>
+                        <div class="bucket-item">
+                            <label class="bucket-label">
+                                <input type="checkbox" class="bucket-checkbox" checked>
+                                <span class="custom-checkbox"><i class="fa-solid fa-heart"></i></span>
+                                <span class="bucket-text">Create our secret anniversary website 💻</span>
+                            </label>
+                        </div>
+                        <div class="bucket-item">
+                            <label class="bucket-label">
+                                <input type="checkbox" class="bucket-checkbox">
+                                <span class="custom-checkbox"><i class="fa-solid fa-heart"></i></span>
+                                <span class="bucket-text">Go stargazing under a clear night sky 🌌</span>
+                            </label>
+                        </div>
+                        <div class="bucket-item">
+                            <label class="bucket-label">
+                                <input type="checkbox" class="bucket-checkbox">
+                                <span class="custom-checkbox"><i class="fa-solid fa-heart"></i></span>
+                                <span class="bucket-text">Build our beautiful cozy home together 🏡</span>
+                            </label>
+                        </div>
+                        <div class="bucket-item">
+                            <label class="bucket-label">
+                                <input type="checkbox" class="bucket-checkbox">
+                                <span class="custom-checkbox"><i class="fa-solid fa-heart"></i></span>
+                                <span class="bucket-text">Adopt a sweet furry companion 🐾</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 11: PHOTO PUZZLE -->
+            <div class="slide slide-puzzle-game" id="slide-11">
+                <div class="puzzle-slide-layout">
+                    <!-- Left: Puzzle Area -->
+                    <div class="puzzle-game-area glass">
+                        <h2>Piece us back together</h2>
+                        <p class="puzzle-slide-desc">Tap tiles to swap them into place so the photo is completely arranged!</p>
+                        
+                        <div class="puzzle-controls-top">
+                            <select id="puzzle-image-select" class="glass-select">
+                                <option value="assets/couple_portrait_vertical.png">Memory 1</option>
+                                <option value="assets/photo1.png">Memory 2</option>
+                                <option value="assets/photo2.png">Memory 3</option>
+                                <option value="assets/photo3.png">Memory 4</option>
+                            </select>
+                            <button id="puzzle-shuffle" class="btn btn-primary"><i class="fa-solid fa-shuffle"></i> Shuffle</button>
+                            <button id="puzzle-preview-btn" class="btn btn-secondary"><i class="fa-solid fa-eye"></i> Preview</button>
+                        </div>
+
+                        <!-- Stats Bar -->
+                        <div class="puzzle-stats glass">
+                            <div><i class="fa-solid fa-route"></i> Moves: <span id="moves-count">0</span></div>
+                            <div><i class="fa-solid fa-stopwatch"></i> Time: <span id="puzzle-timer">00:00</span></div>
+                        </div>
+
+                        <!-- Game Board Canvas -->
+                        <div class="puzzle-board-container">
+                            <canvas id="puzzle-canvas"></canvas>
+                            <div id="puzzle-preview-overlay" class="puzzle-preview-overlay hidden">
+                                <img id="puzzle-preview-img" src="assets/couple_portrait_vertical.png" alt="Preview">
+                            </div>
+                        </div>
+
+                        <div class="puzzle-actions">
+                            <button id="puzzle-solve" class="btn btn-danger-link"><i class="fa-solid fa-wand-magic-sparkles"></i> Magic Solve</button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Target Photo -->
+                    <div class="puzzle-target-area glass">
+                        <h3>Target</h3>
+                        <div class="target-img-frame">
+                            <img id="puzzle-target-img" src="assets/couple_portrait_vertical.png" alt="Target Preview">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Win Modal Overlay -->
+                <div id="puzzle-success-card" class="puzzle-success-card glass hidden animate-pop-in">
+                    <div class="success-icon"><i class="fa-solid fa-heart animate-pulse"></i></div>
+                    <h3>Memory Unlocked!</h3>
+                    <p id="puzzle-success-msg">You've successfully pieced together a beautiful moment.</p>
+                    <button id="puzzle-success-close" class="btn btn-primary">Play Again</button>
+                </div>
+            </div>
+
+            <!-- SLIDE 12: GALLERY -->
+            <div class="slide slide-gallery-page" id="slide-12">
+                <div class="gallery-wrapper">
+                    <h2>Our Gallery of Love</h2>
+                    <p class="gallery-desc-tag">Moments we treasure forever</p>
+                    
+                    <div class="gallery-grid">
+                        <div class="gallery-card glass" data-caption="Where our beautiful official journey began! Smiling and holding hands.">
+                            <div class="card-img-wrapper">
+                                <img src="assets/couple_portrait_vertical.png" alt="Memory 1">
+                            </div>
+                            <div class="card-body">
+                                <p class="card-love-quote">"In your smile, I see something more beautiful than the stars."</p>
+                            </div>
+                        </div>
+                        <div class="gallery-card glass" data-caption="You are the most beautiful girl in the world, and my absolute favorite view.">
+                            <div class="card-img-wrapper">
+                                <img src="assets/photo1.png" alt="Memory 2">
+                            </div>
+                            <div class="card-body">
+                                <p class="card-love-quote">"You are the most beautiful girl in the world, and my absolute favorite view."</p>
+                            </div>
+                        </div>
+                        <div class="gallery-card glass" data-caption="Your kind heart, gentle laughter, and sweet presence make every moment magical.">
+                            <div class="card-img-wrapper">
+                                <img src="assets/photo2.png" alt="Memory 3">
+                            </div>
+                            <div class="card-body">
+                                <p class="card-love-quote">"Your kind heart, gentle laughter, and sweet presence make every moment magical."</p>
+                            </div>
+                        </div>
+                        <div class="gallery-card glass" data-caption="Your elegance, charm, and grace light up my life like no other.">
+                            <div class="card-img-wrapper">
+                                <img src="assets/photo3.png" alt="Memory 4">
+                            </div>
+                            <div class="card-body">
+                                <p class="card-love-quote">"Your elegance, charm, and grace light up my life like no other."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- LIGHTBOX FOR GALLERY -->
+        <div id="lightbox" class="lightbox hidden">
+            <button id="lightbox-close" class="lightbox-close"><i class="fa-solid fa-xmark"></i></button>
+            <div class="lightbox-content glass">
+                <img id="lightbox-img" src="" alt="Zoomed view">
+                <p id="lightbox-caption"></p>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="main-footer text-center">
+            <p>Made with <i class="fa-solid fa-heart animate-pulse"></i> for Us</p>
+            <p class="copyright">&copy; 2026 Anniversary Portal</p>
+        </footer>
+    </div>
+
+    <!-- JS Source -->
+    <script src="script.js"></script>
+</body>
+</html>
